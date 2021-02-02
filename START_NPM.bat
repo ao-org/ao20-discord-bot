@@ -1,1 +1,1 @@
- cmd /C npm start --prefix %~dp0 
+pm2 reload ao20-discord-bot
