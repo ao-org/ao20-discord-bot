@@ -10,6 +10,8 @@ const prefix = "/";
 const env = process.env.NODE_ENV;
 
 const errorMessages = ["Iba por las afueras de Ulla y me mataron 👻"];
+const emojis = [":man_mage:", ":woman_mage:", ":crossed_swords:", ":boom:", ":fire:"];
+const emoji = () => getRandomElement(emojis);
 
 const errorEmbed = new MessageEmbed().setColor("RED");
 const successEmbed = new MessageEmbed().setColor("GREEN");
@@ -29,23 +31,21 @@ const onMessage = async (message) => {
       if (command === "online") {
         const { value: onlineCount } = await db("statistics").select("value").where("name", "online").first();
 
-        channel.send(`Hay **${onlineCount}** usuarios conectados en el servidor.`);
+        const embed = successEmbed.setTitle(`${emoji()} Hay ${onlineCount} usuarios conectados en el servidor.`);
+        channel.send(embed);
       } else if (command === "record") {
         const { value: onlineRecord } = await db("statistics").select("value").where("name", "record").first();
 
-        const embed = successEmbed.setTitle(
-          `:crossed_swords: ${onlineRecord} es el record de usuarios conectados a la vez.`
-        );
-
+        const embed = successEmbed.setTitle(`${emoji()} ${onlineRecord} es el record de usuarios conectados a la vez.`);
         channel.send(embed);
       }
     }
   } catch (err) {
-    console.log(author);
     const embed = errorEmbed
       .setTitle(`${getRandomElement(errorMessages)}`)
-      .setDescription(":x: ¡Ocurrió un error! Consulte a un administrador");
+      .setDescription(":x: ¡Ocurrió un error! Consulte a un administrador.");
     channel.send(embed);
+
     console.error(err);
   }
 };
