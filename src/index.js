@@ -26,7 +26,7 @@ const onMessage = async (message) => {
 
   try {
     if (content.startsWith(prefix)) {
-      const command = content.replace("/", "");
+      const command = content.replace("/", "").toLowerCase();
 
       if (command === "online") {
         const { value: onlineCount } = await db("statistics").select("value").where("name", "online").first();
