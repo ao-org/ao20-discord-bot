@@ -9,6 +9,8 @@ const { getRandomElement } = require("./utils");
 const prefix = "/";
 const env = process.env.NODE_ENV;
 
+const commandList = ["online", "record"];
+
 const errorMessages = ["Iba por las afueras de Ulla y me mataron 👻"];
 const emojis = [":man_mage:", ":woman_mage:", ":crossed_swords:", ":boom:", ":fire:"];
 const emoji = () => getRandomElement(emojis);
@@ -27,6 +29,17 @@ const onMessage = async (message) => {
   try {
     if (content.startsWith(prefix)) {
       const command = content.replace("/", "").toLowerCase();
+
+      if (commandList.find((cmd) => cmd === command)) {
+        // User has entered a valid command
+        if (channel.id != process.env.BOT_CHANNEL_ID) {
+          const embed = errorEmbed
+            .setTitle(`${getRandomElement(errorMessages)}`)
+            .setDescription(`:x: Sólo respondo a comandos escritos en el canal <#${process.env.BOT_CHANNEL_ID}>.`);
+          channel.send(embed);
+          return;
+        }
+      }
 
       if (command === "online") {
         const { value: onlineCount } = await db("statistics").select("value").where("name", "online").first();
