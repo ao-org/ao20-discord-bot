@@ -11,7 +11,7 @@ module.exports = {
       data.push("Acá hay una lista de mis comandos:");
       data.push(
         commands
-          .map((command) => `\`/${command.name}\`\n`)
+          .map((command) => `\`${prefix}${command.name}\`\n`)
           .join(",")
           .replace(/,/g, "")
       );
@@ -26,7 +26,7 @@ module.exports = {
     const command = commands.get(name);
 
     if (!command) {
-      return message.reply(`El comando \`/${args[0]}\` no existe.`);
+      return message.reply(`El comando \`${prefix}${args[0]}\` no existe.`);
     }
 
     data.push(`**Nombre:** \`${command.name}\``);
