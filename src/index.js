@@ -72,7 +72,7 @@ const onMessage = async (message) => {
 const updateMembers = (guild) => {
   const channel = guild.channels.cache.get(process.env.MEMBERS_COUNT_CHANNEL_ID);
 
-  const numbers = /\d/gi;
+  const numbers = /\d+/g;
   channel.setName(channel.name.replace(numbers, guild.memberCount));
 };
 
