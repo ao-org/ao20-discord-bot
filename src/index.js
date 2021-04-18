@@ -7,8 +7,8 @@ const { prefix } = require("./config.json");
 
 const client = new Client();
 client.commands = new Collection();
-const commandFiles = fs.readdirSync("./src/commands").filter((file) => file.endsWith(".js"));
 
+const commandFiles = fs.readdirSync("./src/commands").filter((file) => file.endsWith(".js"));
 for (const file of commandFiles) {
   const command = require(`./commands/${file}`);
 
@@ -18,7 +18,7 @@ for (const file of commandFiles) {
 }
 
 const allowedChannels = process.env.ALLOWED_CHANNELS_IDS.split(",");
-const errorMessages = [":x: Error"];
+const errorMessages = [":x: ¡Ups! Algo falló"];
 
 const updateMembersCount = (guild) => {
   const channel = guild.channels.cache.get(process.env.MEMBERS_COUNT_CHANNEL_ID);
