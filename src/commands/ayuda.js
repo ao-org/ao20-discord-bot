@@ -17,8 +17,6 @@ module.exports = {
       );
       data.push(`Podés enviar \`${prefix}ayuda {comando}\` para recibir información sobre un comando específico.`);
 
-      console.log(data);
-
       return message.channel.send(data);
     }
 
