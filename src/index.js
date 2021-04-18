@@ -22,9 +22,6 @@ const onReady = () => {
   console.log(`BOT ${client.user.tag} conectado correctamente.`);
   console.log(new Date());
 
-  client.on("guildMemberAdd", (member) => updateMembers(member.guild));
-  client.on("guildMemberRemove", (member) => updateMembers(member.guild));
-
   const guild = client.guilds.cache.get(process.env.GUILD_ID);
   updateMembers(guild);
 };
@@ -71,10 +68,14 @@ const onMessage = async (message) => {
 
 const updateMembers = (guild) => {
   const channel = guild.channels.cache.get(process.env.MEMBERS_COUNT_CHANNEL_ID);
-  channel.setName(`Miembros: ${guild.memberCount.toLocaleString()}`);
+
+  const numbers = /d/i;
+  channel.setName(channel.name.replace(numbers, guild.memberCount));
 };
 
 client.on("ready", onReady);
 client.on("message", onMessage);
+client.on("guildMemberAdd", (member) => updateMembers(member.guild));
+client.on("guildMemberRemove", (member) => updateMembers(member.guild));
 
 client.login(process.env.BOT_TOKEN);
