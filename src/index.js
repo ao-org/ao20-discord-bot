@@ -9,7 +9,7 @@ const { getRandomElement } = require("./utils");
 const prefix = "/";
 const env = process.env.NODE_ENV;
 
-const commandList = ["online", "record"];
+const commandList = ["online", "record", "descargar"];
 
 const errorMessages = ["Iba por las afueras de Ulla y me mataron 👻"];
 const emojis = [":man_mage:", ":woman_mage:", ":crossed_swords:", ":boom:", ":fire:"];
@@ -21,6 +21,12 @@ const successEmbed = new MessageEmbed().setColor("GREEN");
 const onReady = () => {
   console.log(`BOT ${client.user.tag} conectado correctamente.`);
   console.log(new Date());
+
+  client.on("guildMemberAdd", (member) => updateMembers(member.guild));
+  client.on("guildMemberRemove", (member) => updateMembers(member.guild));
+
+  const guild = client.guilds.cache.get(process.env.GUILD_ID);
+  updateMembers(guild);
 };
 
 const onMessage = async (message) => {
@@ -61,6 +67,11 @@ const onMessage = async (message) => {
 
     console.error(err);
   }
+};
+
+const updateMembers = (guild) => {
+  const channel = guild.channels.cache.get(process.env.MEMBERS_COUNT_CHANNEL_ID);
+  channel.setName(`Miembros: ${guild.memberCount.toLocaleString()}`);
 };
 
 client.on("ready", onReady);
