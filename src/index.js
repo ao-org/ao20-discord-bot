@@ -22,6 +22,9 @@ const onReady = () => {
   console.log(`BOT ${client.user.tag} conectado correctamente.`);
   console.log(new Date());
 
+  client.on("guildMemberAdd", (member) => updateMembers(member.guild));
+  client.on("guildMemberRemove", (member) => updateMembers(member.guild));
+
   const guild = client.guilds.cache.get(process.env.GUILD_ID);
   updateMembers(guild);
 };
@@ -75,7 +78,5 @@ const updateMembers = (guild) => {
 
 client.on("ready", onReady);
 client.on("message", onMessage);
-client.on("guildMemberAdd", (member) => updateMembers(member.guild));
-client.on("guildMemberRemove", (member) => updateMembers(member.guild));
 
 client.login(process.env.BOT_TOKEN);
