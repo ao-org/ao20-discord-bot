@@ -1,82 +1,77 @@
+const fs = require("fs");
 require("dotenv").config();
-const db = require("./db");
-
-const { Client, MessageEmbed } = require("discord.js");
-const client = new Client();
-
+const { Client, Collection } = require("discord.js");
 const { getRandomElement } = require("./utils");
+const { ErrorEmbed, SuccessEmbed } = require("./embeds");
+const { prefix } = require("./config.json");
 
-const prefix = "/";
-const env = process.env.NODE_ENV;
+const client = new Client();
+client.commands = new Collection();
+const commandFiles = fs.readdirSync("./src/commands").filter((file) => file.endsWith(".js"));
 
-const commandList = ["online", "record", "descargar"];
+for (const file of commandFiles) {
+  const command = require(`./commands/${file}`);
 
-const errorMessages = ["Iba por las afueras de Ulla y me mataron 👻"];
-const emojis = [":man_mage:", ":woman_mage:", ":crossed_swords:", ":boom:", ":fire:"];
-const emoji = () => getRandomElement(emojis);
+  // set a new item in the Collection
+  // with the key as the command name and the value as the exported module
+  client.commands.set(command.name, command);
+}
 
-const errorEmbed = new MessageEmbed().setColor("RED");
-const successEmbed = new MessageEmbed().setColor("GREEN");
+const allowedChannels = process.env.ALLOWED_CHANNELS_IDS.split(",");
+const errorMessages = [":x: Error"];
 
-const onReady = () => {
-  console.log(`BOT ${client.user.tag} conectado correctamente.`);
-  console.log(new Date());
-
-  client.on("guildMemberAdd", (member) => updateMembers(member.guild));
-  client.on("guildMemberRemove", (member) => updateMembers(member.guild));
-
-  const guild = client.guilds.cache.get(process.env.GUILD_ID);
-  updateMembers(guild);
+const updateMembersCount = (guild) => {
+  const channel = guild.channels.cache.get(process.env.MEMBERS_COUNT_CHANNEL_ID);
+  const numbers = /\d+/g;
+  channel.setName(channel.name.replace(numbers, guild.memberCount));
 };
 
 const onMessage = async (message) => {
-  const { content, channel, author } = message;
+  const { content, channel } = message;
 
   try {
-    if (content.startsWith(prefix)) {
-      const command = content.replace("/", "").toLowerCase();
+    if (!content.startsWith(prefix)) return;
 
-      if (commandList.find((cmd) => cmd === command)) {
-        // User has entered a valid command
-        if (channel.id != process.env.BOT_CHANNEL_ID) {
-          const embed = errorEmbed
-            .setTitle(`${getRandomElement(errorMessages)}`)
-            .setDescription(`:x: Sólo respondo a comandos escritos en el canal <#${process.env.BOT_CHANNEL_ID}>.`);
-          channel.send(embed);
-          return;
-        }
-      }
+    const args = message.content.slice(prefix.length).trim().split(/ +/);
+    const commandName = args.shift().toLowerCase();
 
-      if (command === "online") {
-        const { value: onlineCount } = await db("statistics").select("value").where("name", "online").first();
+    if (!client.commands.has(commandName)) return;
 
-        const embed = successEmbed.setTitle(`${emoji()} Hay ${onlineCount} usuarios conectados en el servidor.`);
-        channel.send(embed);
-      } else if (command === "record") {
-        const { value: onlineRecord } = await db("statistics").select("value").where("name", "record").first();
-
-        const embed = successEmbed.setTitle(`${emoji()} ${onlineRecord} es el record de usuarios conectados a la vez.`);
-        channel.send(embed);
-      }
+    // Only allow commands to be written
+    // on some channels to prevent spam
+    if (!allowedChannels.find((ch) => ch == channel.id)) {
+      return channel.send(
+        new ErrorEmbed()
+          .setTitle(`${getRandomElement(errorMessages)}`)
+          .setDescription(
+            `Sólo respondo a comandos escritos en ${
+              allowedChannels.length == 1 ? "el canal" : "los canales"
+            } ${allowedChannels.map((ch) => `<#${ch}>`)}`
+          )
+      );
     }
+
+    const command = client.commands.get(commandName);
+    command.execute(message, args);
   } catch (err) {
-    const embed = errorEmbed
-      .setTitle(`${getRandomElement(errorMessages)}`)
-      .setDescription(":x: ¡Ocurrió un error! Consulte a un administrador.");
-    channel.send(embed);
+    channel.send(new ErrorEmbed().setTitle(":x: ¡Ocurrió un error! Consulte a un administrador."));
 
     console.error(err);
   }
 };
 
-const updateMembers = (guild) => {
-  const channel = guild.channels.cache.get(process.env.MEMBERS_COUNT_CHANNEL_ID);
+const onReady = () => {
+  console.log(`BOT ${client.user.tag} conectado correctamente.`);
+  console.log(new Date());
 
-  const numbers = /\d+/g;
-  channel.setName(channel.name.replace(numbers, guild.memberCount));
+  const guild = client.guilds.cache.get(process.env.GUILD_ID);
+
+  updateMembersCount(guild);
 };
 
 client.on("ready", onReady);
 client.on("message", onMessage);
+client.on("guildMemberAdd", (member) => updateMembersCount(member.guild));
+client.on("guildMemberRemove", (member) => updateMembersCount(member.guild));
 
 client.login(process.env.BOT_TOKEN);
