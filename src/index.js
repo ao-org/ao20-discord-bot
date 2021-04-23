@@ -29,6 +29,11 @@ const updateMembersCount = (guild) => {
 const onMessage = async (message) => {
   const { content, channel } = message;
 
+  if (channel.id == 800427885089390602) {
+    message.react("✅");
+    message.react("❌");
+  }
+
   try {
     if (!content.startsWith(prefix)) return;
 

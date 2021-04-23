@@ -5,7 +5,7 @@ module.exports = {
   description: "Lista todos los comandos.",
   execute(message, args) {
     const data = [];
-    const { commands } = message.client;
+    const { commands, channel } = message.client;
 
     if (!args.length) {
       data.push("Acá hay una lista de mis comandos:");
@@ -17,7 +17,7 @@ module.exports = {
       );
       data.push(`Podés enviar \`${prefix}ayuda {comando}\` para recibir información sobre un comando específico.`);
 
-      return message.channel.send(data);
+      return channel.send(data);
     }
 
     const name = args[0].toLowerCase();
@@ -30,6 +30,6 @@ module.exports = {
     data.push(`**Nombre:** \`${command.name}\``);
     if (command.description) data.push(`**Descripción:** ${command.description}`);
 
-    message.channel.send(data, { split: true });
+    channel.send(data, { split: true });
   },
 };
