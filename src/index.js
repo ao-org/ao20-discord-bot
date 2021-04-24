@@ -29,9 +29,19 @@ const updateMembersCount = (guild) => {
 const onMessage = async (message) => {
   const { content, channel } = message;
 
+  // Canal "sugerencias"
   if (channel.id == 800427885089390602) {
-    message.react("✅");
-    message.react("❌");
+    await message.react("✅");
+    await message.react("❌");
+  }
+
+  // Canal "bugs"
+  if (channel.id == 773314521041207357) {
+    await message.react("🙌");
+    // await message.react("🇬");
+    // await message.react("🇷");
+    // await message.react("🇦");
+    // await message.react("🇽");
   }
 
   try {
