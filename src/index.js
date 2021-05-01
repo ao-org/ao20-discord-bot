@@ -35,11 +35,6 @@ const onMessage = async (message) => {
     await message.react("❌");
   }
 
-  // Canal "bugs"
-  if (channel.id == 773314521041207357) {
-    await message.react("🙌");
-  }
-
   try {
     if (!content.startsWith(prefix)) return;
 
