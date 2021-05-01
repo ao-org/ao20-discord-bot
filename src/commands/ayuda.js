@@ -5,7 +5,8 @@ module.exports = {
   description: "Lista todos los comandos.",
   execute(message, args) {
     const data = [];
-    const { commands, channel } = message.client;
+    const commands = message.client.commands;
+    const { channel } = message;
 
     if (!args.length) {
       data.push("Acá hay una lista de mis comandos:");

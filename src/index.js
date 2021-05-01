@@ -38,10 +38,6 @@ const onMessage = async (message) => {
   // Canal "bugs"
   if (channel.id == 773314521041207357) {
     await message.react("🙌");
-    // await message.react("🇬");
-    // await message.react("🇷");
-    // await message.react("🇦");
-    // await message.react("🇽");
   }
 
   try {
