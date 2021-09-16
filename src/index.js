@@ -40,17 +40,30 @@ const onMessage = async (message) => {
   try {
     // Ctrl
     if (!author.bot) {
+      const timestamp = Date.now();
+
+      // Mute
+      if (user_db[author.id] && user_db[author.id].muted_upto >= timestamp) {
+        await message.delete();
+        return author.send(
+          new ErrorEmbed()
+            .setTitle(`⛔ No podés enviar mensajes hasta: ${new Date(user_db[author.id].muted_upto).toLocaleTimeString('es')}`)
+        );
+      }
+
       const clean_content = content.toLowerCase().replace(/\s/g, '');
       if (clean_content.includes('ctrl')) {
-        if (!user_db[author.id]) user_db[author.id] = 0;
-        user_db[author.id]++;
+        if (!user_db[author.id]) user_db[author.id] = { mute: 0 };
+        user_db[author.id].mute++;
 
         if (user_db[author.id] >= 3) {
-          await channel.send(
+          user_db[author.id].muted_upto = timestamp + 10 * 60 * 1000;
+
+          return channel.send(
             new ErrorEmbed()
               .setTitle(`⛔ Te avisé ${author.username}.\nTe vas muteado papu 💩`)
           );
-          return channel.send(`?mute ${author} 10m`);
+
         } else {
           return channel.send(
             new ErrorEmbed()
@@ -58,11 +71,12 @@ const onMessage = async (message) => {
           );
         }
       } else if (clean_content.includes('ctri')) {
-        await channel.send(
+        if (!user_db[author.id]) user_db[author.id] = { muted_upto: timestamp + 10 * 60 * 1000 };
+
+        return channel.send(
           new ErrorEmbed()
             .setTitle(`⛔ Te pasas de vivo, ${author.username}?\nMuteado papu 💩`)
         );
-        return channel.send(`?mute ${author} 10m`);
       }
     }
 
