@@ -71,7 +71,8 @@ const onMessage = async (message) => {
           );
         }
       } else if (clean_content.includes('ctri')) {
-        if (!user_db[author.id]) user_db[author.id] = { muted_upto: timestamp + 10 * 60 * 1000 };
+        if (!user_db[author.id]) user_db[author.id] = { mute: 3 };
+        user_db[author.id].muted_upto = timestamp + 10 * 60 * 1000;
 
         return channel.send(
           new ErrorEmbed()
