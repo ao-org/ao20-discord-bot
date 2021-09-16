@@ -27,7 +27,7 @@ const updateMembersCount = (guild) => {
 };
 
 const onMessage = async (message) => {
-  const { content, channel } = message;
+  const { content, channel, author } = message;
 
   // Canal "sugerencias"
   if (channel.id == 800427885089390602) {
@@ -36,6 +36,14 @@ const onMessage = async (message) => {
   }
 
   try {
+    // Ctrl
+    if (content.toLowerCase().includes('ctrl') && !author.bot) {
+      return channel.send(
+        new ErrorEmbed()
+          .setTitle(`⛔ Los Ctrl están prohibidos, ${author.toString()}. Si continúa enviándolos será expulsado.`)
+      );
+    }
+
     if (!content.startsWith(prefix)) return;
 
     const args = message.content.slice(prefix.length).trim().split(/ +/);
@@ -50,8 +58,7 @@ const onMessage = async (message) => {
         new ErrorEmbed()
           .setTitle(`${getRandomElement(errorMessages)}`)
           .setDescription(
-            `Sólo respondo a comandos escritos en ${
-              allowedChannels.length == 1 ? "el canal" : "los canales"
+            `Sólo respondo a comandos escritos en ${allowedChannels.length == 1 ? "el canal" : "los canales"
             } ${allowedChannels.map((ch) => `<#${ch}>`)}`
           )
       );
