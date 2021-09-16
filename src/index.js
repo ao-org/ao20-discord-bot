@@ -50,7 +50,7 @@ const onMessage = async (message) => {
             new ErrorEmbed()
               .setTitle(`⛔ Te avisé ${author.username}.\nTe vas muteado papu 💩`)
           );
-          return channel.send(`?mute ${user} 10m`);
+          return channel.send(`?mute ${author} 10m`);
         } else {
           return channel.send(
             new ErrorEmbed()
@@ -62,7 +62,7 @@ const onMessage = async (message) => {
           new ErrorEmbed()
             .setTitle(`⛔ Te pasas de vivo, ${author.username}?\nMuteado papu 💩`)
         );
-        return channel.send(`?mute ${user} 10m`);
+        return channel.send(`?mute ${author} 10m`);
       }
     }
 
