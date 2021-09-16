@@ -20,6 +20,8 @@ for (const file of commandFiles) {
 const allowedChannels = process.env.ALLOWED_CHANNELS_IDS.split(",");
 const errorMessages = [":x: ¡Ups! Algo falló"];
 
+const user_db = {};
+
 const updateMembersCount = (guild) => {
   const channel = guild.channels.cache.get(process.env.MEMBERS_COUNT_CHANNEL_ID);
   const numbers = /\d+/g;
@@ -37,11 +39,31 @@ const onMessage = async (message) => {
 
   try {
     // Ctrl
-    if (content.toLowerCase().includes('ctrl') && !author.bot) {
-      return channel.send(
-        new ErrorEmbed()
-          .setTitle(`⛔ Los Ctrl están prohibidos, ${author.username}.\nSi continúa enviándolos será expulsado.`)
-      );
+    if (!author.bot) {
+      const clean_content = content.toLowerCase().replaceAll(' ', '');
+      if (clean_content.includes('ctrl')) {
+        if (!user_db[author.id]) user_db[author.id] = 0;
+        user_db[author.id]++;
+
+        if (user_db[author.id] >= 3) {
+          await channel.send(
+            new ErrorEmbed()
+              .setTitle(`⛔ Te avisé ${author.username}.\nTe vas muteado papu 💩`)
+          );
+          return channel.send(`?mute ${user} 10m`);
+        } else {
+          return channel.send(
+            new ErrorEmbed()
+              .setTitle(`⛔ Los Ctrl están prohibidos, ${author.username}.\nSi continúa enviándolos será expulsado.`)
+          );
+        }
+      } else if (clean_content.includes('ctri')) {
+        await channel.send(
+          new ErrorEmbed()
+            .setTitle(`⛔ Te pasas de vivo, ${author.username}?\nMuteado papu 💩`)
+        );
+        return channel.send(`?mute ${user} 10m`);
+      }
     }
 
     if (!content.startsWith(prefix)) return;
@@ -84,6 +106,7 @@ const onReady = () => {
 
 client.on("ready", onReady);
 client.on("message", onMessage);
+client.on("messageUpdate", onMessage);
 client.on("guildMemberAdd", (member) => updateMembersCount(member.guild));
 client.on("guildMemberRemove", (member) => updateMembersCount(member.guild));
 
