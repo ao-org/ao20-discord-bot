@@ -40,7 +40,7 @@ const onMessage = async (message) => {
     if (content.toLowerCase().includes('ctrl') && !author.bot) {
       return channel.send(
         new ErrorEmbed()
-          .setTitle(`⛔ Los Ctrl están prohibidos, ${author.toString()}. Si continúa enviándolos será expulsado.`)
+          .setTitle(`⛔ Los Ctrl están prohibidos, ${author.username}.\nSi continúa enviándolos será expulsado.`)
       );
     }
 
