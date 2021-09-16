@@ -56,7 +56,7 @@ const onMessage = async (message) => {
         if (!user_db[author.id]) user_db[author.id] = { mute: 0 };
         user_db[author.id].mute++;
 
-        if (user_db[author.id] >= 3) {
+        if (user_db[author.id].mute >= 3) {
           user_db[author.id].muted_upto = timestamp + 10 * 60 * 1000;
 
           return channel.send(
