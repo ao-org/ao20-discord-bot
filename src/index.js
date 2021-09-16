@@ -39,7 +39,7 @@ const onMessage = async (message) => {
 
   try {
     // Ctrl
-    if (!author.bot) {
+    if (message.guild != null && !author.bot) {
       const timestamp = Date.now();
 
       // Mute
