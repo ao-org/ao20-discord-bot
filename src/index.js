@@ -38,33 +38,7 @@ const onMessage = async (message) => {
   }
 
   try {
-    // Ctrl
-    if (!author.bot) {
-      const clean_content = content.toLowerCase().replaceAll(' ', '');
-      if (clean_content.includes('ctrl')) {
-        if (!user_db[author.id]) user_db[author.id] = 0;
-        user_db[author.id]++;
 
-        if (user_db[author.id] >= 3) {
-          await channel.send(
-            new ErrorEmbed()
-              .setTitle(`⛔ Te avisé ${author.username}.\nTe vas muteado papu 💩`)
-          );
-          return channel.send(`?mute ${user} 10m`);
-        } else {
-          return channel.send(
-            new ErrorEmbed()
-              .setTitle(`⛔ Los Ctrl están prohibidos, ${author.username}.\nSi continúa enviándolos será expulsado.`)
-          );
-        }
-      } else if (clean_content.includes('ctri')) {
-        await channel.send(
-          new ErrorEmbed()
-            .setTitle(`⛔ Te pasas de vivo, ${author.username}?\nMuteado papu 💩`)
-        );
-        return channel.send(`?mute ${user} 10m`);
-      }
-    }
 
     if (!content.startsWith(prefix)) return;
 
