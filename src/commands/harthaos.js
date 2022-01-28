@@ -5,9 +5,15 @@ const { emoji } = require("../utils");
 module.exports = {
   name: "harthaos",
   description: "El mejor.",
-  async execute(message, args) {
-    channel.send(
-      new SuccessEmbed().setTitle(`HarThaoS es el mejor.`)
-    );
-  },
+  execute(message, args) {
+    const data = [];
+    const commands = message.client.commands;
+    const { channel } = message;
+
+    if (!args.length) {
+      data.push("HarThaoS es el mejor");   
+
+      return channel.send(data);
+    }
+}
 };
