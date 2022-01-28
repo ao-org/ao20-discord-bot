@@ -90,16 +90,16 @@ const onMessage = async (message) => {
 
     // Only allow commands to be written
     // on some channels to prevent spam
-    if (!allowedChannels.find((ch) => ch == channel.id)) {
-      return channel.send(
-        new ErrorEmbed()
-          .setTitle(`${getRandomElement(errorMessages)}`)
-          .setDescription(
-            `Sólo respondo a comandos escritos en ${allowedChannels.length == 1 ? "el canal" : "los canales"
-            } ${allowedChannels.map((ch) => `<#${ch}>`)}`
-          )
-      );
-    }
+    // if (!allowedChannels.find((ch) => ch == channel.id)) {
+    //   return channel.send(
+    //     new ErrorEmbed()
+    //       .setTitle(`${getRandomElement(errorMessages)}`)
+    //       .setDescription(
+    //         `Sólo respondo a comandos escritos en ${allowedChannels.length == 1 ? "el canal" : "los canales"
+    //         } ${allowedChannels.map((ch) => `<#${ch}>`)}`
+    //       )
+    //   );
+    // }
 
     const command = client.commands.get(commandName);
     command.execute(message, args);
