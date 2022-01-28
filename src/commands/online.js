@@ -8,7 +8,7 @@ module.exports = {
   async execute(message, args) {
     const { channel } = message;
 
-    const { value: onlineCount } = await db("statistics").select("value").where("name", "online").first();
+    const { online: onlineCount } = await db("statistics").select("online").first();
     channel.send(new SuccessEmbed().setTitle(`${emoji()} Hay ${onlineCount} usuarios conectados en el servidor.`));
   },
 };

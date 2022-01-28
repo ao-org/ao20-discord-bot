@@ -38,48 +38,48 @@ const onMessage = async (message) => {
   }
 
   try {
-    // Ctrl
-    // if (message.guild != null && !author.bot) {
-    //   const timestamp = Date.now();
+    Ctrl
+    if (message.guild != null && !author.bot) {
+      const timestamp = Date.now();
 
-    //   // Mute
-    //   if (user_db[author.id] && user_db[author.id].muted_upto >= timestamp) {
-    //     await message.delete();
-    //     return author.send(
-    //       new ErrorEmbed()
-    //         .setTitle(`⛔ No podés enviar mensajes hasta: ${new Date(user_db[author.id].muted_upto).toLocaleTimeString('es')}`)
-    //     );
-    //   }
+      // Mute
+      if (user_db[author.id] && user_db[author.id].muted_upto >= timestamp) {
+        await message.delete();
+        return author.send(
+          new ErrorEmbed()
+            .setTitle(`⛔ No podés enviar mensajes hasta: ${new Date(user_db[author.id].muted_upto).toLocaleTimeString('es')}`)
+        );
+      }
 
-    //   const clean_content = content.toLowerCase().replace(/\s/g, '');
-    //   if (clean_content.includes('ctrl')) {
-    //     if (!user_db[author.id]) user_db[author.id] = { mute: 0 };
-    //     user_db[author.id].mute++;
+      const clean_content = content.toLowerCase().replace(/\s/g, '');
+      if (clean_content.includes('ctrl')) {
+        if (!user_db[author.id]) user_db[author.id] = { mute: 0 };
+        user_db[author.id].mute++;
 
-    //     if (user_db[author.id].mute >= 3) {
-    //       user_db[author.id].muted_upto = timestamp + 10 * 60 * 1000;
+        if (user_db[author.id].mute >= 3) {
+          user_db[author.id].muted_upto = timestamp + 1 * 60 * 1000;
 
-    //       return channel.send(
-    //         new ErrorEmbed()
-    //           .setTitle(`⛔ Te avisé ${author.username}.\nTe vas muteado papu 💩`)
-    //       );
+          return channel.send(
+            new ErrorEmbed()
+              .setTitle(`⛔ Te avisé ${author.username}.\nTe vas muteado papu 💩`)
+          );
 
-    //     } else {
-    //       return channel.send(
-    //         new ErrorEmbed()
-    //           .setTitle(`⛔ Los Ctrl están prohibidos, ${author.username}.\nSi continúa enviándolos será expulsado.`)
-    //       );
-    //     }
-    //   } else if (clean_content.includes('ctri')) {
-    //     if (!user_db[author.id]) user_db[author.id] = { mute: 3 };
-    //     user_db[author.id].muted_upto = timestamp + 10 * 60 * 1000;
+        } else {
+          return channel.send(
+            new ErrorEmbed()
+              .setTitle(`⛔ Los Ctrl están prohibidos, ${author.username}.\nSi continúa enviándolos será expulsado.`)
+          );
+        }
+      } else if (clean_content.includes('ctri')) {
+        if (!user_db[author.id]) user_db[author.id] = { mute: 3 };
+        user_db[author.id].muted_upto = timestamp + 1 * 60 * 1000;
 
-    //     return channel.send(
-    //       new ErrorEmbed()
-    //         .setTitle(`⛔ Te pasas de vivo, ${author.username}?\nMuteado papu 💩`)
-    //     );
-    //   }
-    // }
+        return channel.send(
+          new ErrorEmbed()
+            .setTitle(`⛔ Te pasas de vivo, ${author.username}?\nMuteado papu 💩`)
+        );
+      }
+    }
 
     if (!content.startsWith(prefix)) return;
 
