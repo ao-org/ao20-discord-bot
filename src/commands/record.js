@@ -8,9 +8,9 @@ module.exports = {
   async execute(message, args) {
     const { channel } = message;
 
-    const { record: onlineRecord } = await db("statistics").select("record").first();
+    const { online_user_record  } = await db("service_status").select("online_user_record").first();
     channel.send(
-      new SuccessEmbed().setTitle(`${emoji()} ${onlineRecord} es el record de usuarios conectados a la vez.`)
+      new SuccessEmbed().setTitle(`${emoji()} ${online_user_record} es el record de usuarios conectados a la vez.`)
     );
   },
 };

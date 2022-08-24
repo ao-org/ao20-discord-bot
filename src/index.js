@@ -38,7 +38,6 @@ const onMessage = async (message) => {
   }
 
   try {
-    Ctrl
     if (message.guild != null && !author.bot) {
       const timestamp = Date.now();
 
