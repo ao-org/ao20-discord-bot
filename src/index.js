@@ -38,6 +38,19 @@ const onMessage = async (message) => {
   }
 
   try {
+    if (message.guild != null && !author.bot) {
+      const timestamp = Date.now();
+
+      // Mute
+      if (user_db[author.id] && user_db[author.id].muted_upto >= timestamp) {
+        await message.delete();
+        return author.send(
+          new ErrorEmbed()
+            .setTitle(`⛔ No podés enviar mensajes hasta: ${new Date(user_db[author.id].muted_upto).toLocaleTimeString('es')}`)
+        );
+      }
+    }
+
     if (!content.startsWith(prefix)) return;
 
     const args = message.content.slice(prefix.length).trim().split(/ +/);
