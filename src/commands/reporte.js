@@ -23,7 +23,9 @@ module.exports = {
           const reportJson = JSON.parse(report);
 
           channel.send(
-            new SuccessEmbed().setTitle(`${emoji()} ${reportJson} `)
+            new SuccessEmbed()
+                  .setTitle(`${emoji()} ${reportJson} `)
+                  .setFooter("Ver todos: https://estadisticas.ao20.com.ar/produccion/reports.php?dir=reports")
           );
         })
 
