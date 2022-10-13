@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@prismicio/client": "^4.0.0",
+    "axios": "^1.1.2",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
     "knex": "^0.21.17",

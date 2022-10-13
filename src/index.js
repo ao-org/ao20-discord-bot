@@ -1,7 +1,8 @@
-const fs = require("fs");
 require("dotenv").config();
+const fs = require("fs");
 const { Client, Collection } = require("discord.js");
 const { getRandomElement } = require("./utils");
+const { sendReport, getLastReport } = require("./commands/reporte");
 const { ErrorEmbed, SuccessEmbed } = require("./embeds");
 const { prefix } = require("./config.json");
 
@@ -80,13 +81,29 @@ const onMessage = async (message) => {
   }
 };
 
-const onReady = () => {
+let lastReportRawData = "";
+
+const onReady = async () => {
   console.log(`BOT ${client.user.tag} conectado correctamente.`);
   console.log(new Date());
 
   const guild = client.guilds.cache.get(process.env.GUILD_ID);
 
   updateMembersCount(guild);
+
+  //Esto es para enviar al chat de discord los reportes de personajes
+  setInterval(async () => {
+    client.channels.fetch('867154125786185749')
+    .then(async (channel) => {
+      const report = await getLastReport();
+      if (JSON.stringify(report.data) != lastReportRawData) {
+        lastReportRawData = JSON.stringify(report.data)
+        sendReport(channel);
+      }
+    })  
+    .catch(console.error);
+  }, 900000);
+
 };
 
 client.on("ready", onReady);

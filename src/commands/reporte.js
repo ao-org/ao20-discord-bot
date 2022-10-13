@@ -1,54 +1,44 @@
 const { SuccessEmbed, ErrorEmbed } = require("../embeds");
-const { emoji } = require("../utils");
-const http =  require("https")
+const axios = require('axios').default;
+const url = 'https://estadisticas.ao20.com.ar/produccion/reports.php?last=true&dir=reports'
+
+async function getLastReport() {
+  const axios = require('axios');
+
+  const { data } = await axios.get(url);
+  let users = Object.keys(data.Reports);
+  console.log("RES:" + data);
+  return { data, users };
+}
+
+async function sendReport(channel, data) {
+  const report = await getLastReport();
+
+  report.users.forEach((user) => {
+    channel.send(
+      new SuccessEmbed()
+        .setColor(0xeb34d2)
+        .setTitle(`${user}`)
+        .setURL('https://estadisticas.ao20.com.ar/produccion/reports.php?dir=reports')
+        .addFields(
+          { name: 'AccId', value: report.data.Reports[user].AccID, inline: true },
+          { name: 'BaseLevel', value: report.data.Reports[user].BaseLevel, inline: true },
+          { name: 'CharID', value: report.data.Reports[user].CharID, inline: true },
+        )
+        .addFields({ name: 'Warnings', value: report.data.Reports[user].Warnings })
+        .setTimestamp()
+    );
+
+  });
+}
 
 module.exports = {
+  sendReport,
+  getLastReport,
   name: "reporte",
   description: "Obtiene reporte de evolucion de personajes.",
   async execute(message, args) {
     const { channel } = message;
-    const url = 'https://estadisticas.ao20.com.ar/produccion/reports.php?last=true&dir=reports'
-
-    http.get(url, res => {
-
-        let rawData = ''
-
-        res.on('data', chunk => {
-            rawData += chunk
-        })
-        
-        res.on('end', () => {
-          let report = response.replace("\r\n", "");
-          report = report.replace("\\", "")
-          const reportJson = JSON.parse(report);
-
-          channel.send(
-            new SuccessEmbed()
-                  .setTitle(`${emoji()} ${reportJson} `)
-                  .setFooter("Ver todos: https://estadisticas.ao20.com.ar/produccion/reports.php?dir=reports")
-          );
-        })
-
-    })
-
-
-    // axios.get('https://estadisticas.ao20.com.ar/produccion/reports.php?last=true&dir=reports')
-    //   .then(function (response) {
-    //     let report = response.replace("\r\n", "");
-    //     report = report.replace("\\", "")
-    //     const reportJson = JSON.parse(report);
-
-
-    //     channel.send(
-    //       new SuccessEmbed().setTitle(`${emoji()} ${reportJson} `)
-    //     );
-
-    //   })
-    //   .catch(function (error) {
-    //     // handle error
-    //     channel.send(
-    //       new ErrorEmbed().setTitle(`Error al obtener reporte ${error}`)
-    //     );
-    //   })
+    sendReport(channel);
   },
 };
