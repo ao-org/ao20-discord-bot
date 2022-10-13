@@ -10,6 +10,7 @@ async function getLastReport() {
 
 async function sendReport(channel, data) {
   const report = await getLastReport();
+  const footer = `${report.data.DBData.EndDB} - ${report.data.DBData.StartDB}`
 
   report.users.forEach((user) => {
     channel.send(
@@ -22,8 +23,10 @@ async function sendReport(channel, data) {
           { name: 'BaseLevel', value: report.data.Reports[user].BaseLevel, inline: true },
           { name: 'CharID', value: report.data.Reports[user].CharID, inline: true },
         )
-        .addFields({ name: 'Warnings', value: report.data.Reports[user].Warnings })
+        .addFields({ name: 'Warnings', value: report.data.Reports[user].Warnings ? report.data.Reports[user].Warnings : 'No hay warnings' })
+        .addFields({ name: 'Errors', value: report.data.Reports[user].Errors ? report.data.Reports[user].Errors : 'No hay errores' })
         .setTimestamp()
+        .setFooter({text: footer})
     );
 
   });
