@@ -1,10 +1,8 @@
 const { SuccessEmbed, ErrorEmbed } = require("../embeds");
-const axios = require('axios').default;
+const axios = require('axios');
 const url = 'https://estadisticas.ao20.com.ar/produccion/reports.php?last=true&dir=reports'
 
 async function getLastReport() {
-  const axios = require('axios');
-
   const { data } = await axios.get(url);
   let users = Object.keys(data.Reports);
   return { data, users };
