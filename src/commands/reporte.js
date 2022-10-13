@@ -7,7 +7,6 @@ async function getLastReport() {
 
   const { data } = await axios.get(url);
   let users = Object.keys(data.Reports);
-  console.log("RES:" + data);
   return { data, users };
 }
 
