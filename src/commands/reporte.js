@@ -26,7 +26,7 @@ async function sendReport(channel, data) {
         .addFields({ name: 'Warnings', value: report.data.Reports[user].Warnings ? report.data.Reports[user].Warnings : 'No hay warnings' })
         .addFields({ name: 'Errors', value: report.data.Reports[user].Errors ? report.data.Reports[user].Errors : 'No hay errores' })
         .setTimestamp()
-        .setFooter({text: footer})
+        .setFooter(footer)
     );
 
   });
