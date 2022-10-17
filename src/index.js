@@ -93,7 +93,7 @@ const onReady = async () => {
 
   //Esto es para enviar al chat de discord los reportes de personajes
   setInterval(async () => {
-    client.channels.fetch('867154125786185749')
+    client.channels.fetch('1031483686828384276')
     .then(async (channel) => {
       const report = await getLastReport();
       if (JSON.stringify(report.data) != lastReportRawData) {
