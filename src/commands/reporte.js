@@ -15,7 +15,7 @@ async function sendReport(channel, data) {
   report.users.forEach((user) => {
     channel.send(
       new SuccessEmbed()
-        .setColor(report.data.Reports[user].Errors ? 0xc9ea10 : 0xf91d09)
+        .setColor(report.data.Reports[user].Errors ? 0xf91d09 : 0xc9ea10)
         .setTitle(`${user}`)
         .setURL('https://estadisticas.ao20.com.ar/produccion/reports.php?dir=reports')
         .addFields(
