@@ -5,12 +5,31 @@ const url = 'https://estadisticas.ao20.com.ar/produccion/reports.php?last=true&d
 async function getLastReport() {
   const { data } = await axios.get(url);
   let users = Object.keys(data.Reports);
-  return { data, users };
+  let gold = data.Gold;
+  
+  //Do this validation to avoid error when this property is:
+  //AccountReports	"There are no reports"
+  let accountReports;
+  if (Array.isArray(data.accountReports)) {
+    accountReports = Object.keys(data.accountReports);
+  }
+
+  return { data, users, accountReports, gold };
 }
 
 async function sendReport(channel, data) {
   const report = await getLastReport();
   const footer = `${report.data.DBData.EndDB} - ${report.data.DBData.StartDB}`
+
+  channel.send(
+    new SuccessEmbed()
+      .setColor(0x3f0e3e)
+      .setTitle("Oro total del mundo (no incluye valor de items)")
+      .setURL('https://estadisticas.ao20.com.ar/produccion/reports.php?dir=reports')
+      .addFields({ name: 'Inflacion', value: report.gold })
+      .setTimestamp()
+      .setFooter(footer)
+  );
 
   report.users.forEach((user) => {
     channel.send(
@@ -28,8 +47,23 @@ async function sendReport(channel, data) {
         .setTimestamp()
         .setFooter(footer)
     );
-
   });
+
+  if (Array.isArray(data.accountReports)) {
+    report.accountReports.forEach((account) => {
+      channel.send(
+        new SuccessEmbed()
+          .setColor(0xf44ede)
+          .setTitle(`Cuenta ID: ${account}`)
+          .setURL('https://estadisticas.ao20.com.ar/produccion/reports.php?dir=reports')
+          .addFields({ name: 'Warnings', value: report.data.AccountReports[account].Warnings ? report.data.AccountReports[account].Warnings : 'No hay warnings' })
+          .addFields({ name: 'Errors', value: report.data.AccountReports[account].Errors ? report.data.AccountReports[account].Errors : 'No hay errores' })
+          .setTimestamp()
+          .setFooter(footer)
+      );
+    });
+  }
+
 }
 
 module.exports = {
