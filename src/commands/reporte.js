@@ -6,7 +6,7 @@ async function getLastReport() {
   const { data } = await axios.get(url);
   const users = Object.keys(data.Reports);
 
-  return { data, users, accountReports, gold };
+  return { data, users };
 }
 
 async function sendReport(channel, data) {
