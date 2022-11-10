@@ -87,10 +87,6 @@ const onReady = async () => {
   console.log(`BOT ${client.user.tag} conectado correctamente.`);
   console.log(new Date());
 
-  const guild = client.guilds.cache.get(process.env.GUILD_ID);
-
-  updateMembersCount(guild);
-
   //Esto es para enviar al chat de discord los reportes de personajes
   setInterval(async () => {
     client.channels.fetch('1031483686828384276')
@@ -103,6 +99,12 @@ const onReady = async () => {
     })  
     .catch(console.error);
   }, 900000);
+
+  //Esto es para actualizar contador de miembros de discord
+  setInterval(async () => {
+    const guild = client.guilds.cache.get(process.env.GUILD_ID);
+    updateMembersCount(guild);
+  }, 120000);
 
 };
 
