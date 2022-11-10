@@ -4,15 +4,7 @@ const url = 'https://estadisticas.ao20.com.ar/produccion/reports.php?last=true&d
 
 async function getLastReport() {
   const { data } = await axios.get(url);
-  let users = Object.keys(data.Reports);
-  let gold = data.Gold;
-  
-  //Do this validation to avoid error when this property is:
-  //AccountReports	"There are no reports"
-  let accountReports;
-  if (Array.isArray(data.accountReports)) {
-    accountReports = Object.keys(data.accountReports);
-  }
+  const users = Object.keys(data.Reports);
 
   return { data, users, accountReports, gold };
 }
@@ -26,7 +18,7 @@ async function sendReport(channel, data) {
       .setColor(0x3f0e3e)
       .setTitle("Oro total del mundo (no incluye valor de items)")
       .setURL('https://estadisticas.ao20.com.ar/produccion/reports.php?dir=reports')
-      .addFields({ name: 'Inflacion', value: report.gold })
+      .addFields({ name: 'Inflacion', value: report.data.Gold })
       .setTimestamp()
       .setFooter(footer)
   );
@@ -49,15 +41,15 @@ async function sendReport(channel, data) {
     );
   });
 
-  if (Array.isArray(data.accountReports)) {
-    report.accountReports.forEach((account) => {
+  if (Array.isArray(report.data.AccountReports)) {
+    report.data.AccountReports.forEach((account) => {
       channel.send(
         new SuccessEmbed()
           .setColor(0xf44ede)
-          .setTitle(`Cuenta ID: ${account}`)
+          .setTitle(`Cuenta ID: ${account.AccID}`)
           .setURL('https://estadisticas.ao20.com.ar/produccion/reports.php?dir=reports')
-          .addFields({ name: 'Warnings', value: report.data.AccountReports[account].Warnings ? report.data.AccountReports[account].Warnings : 'No hay warnings' })
-          .addFields({ name: 'Errors', value: report.data.AccountReports[account].Errors ? report.data.AccountReports[account].Errors : 'No hay errores' })
+          .addFields({ name: 'Warnings', value: account.Warnings ? account.Warnings : 'No hay warnings' })
+          .addFields({ name: 'Errors', value: account.Errors ? account.Errors : 'No hay errores' })
           .setTimestamp()
           .setFooter(footer)
       );
