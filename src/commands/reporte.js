@@ -42,7 +42,7 @@ async function sendReport(channel, data) {
     );
   });
 
-  if (Array.isArray(report.accountReports)) {
+  if (Array.isArray(report.data.AccountReports)) {
     report.accountReports.forEach((account) => {
       channel.send(
         new SuccessEmbed()
