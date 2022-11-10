@@ -5,8 +5,9 @@ const url = 'https://estadisticas.ao20.com.ar/produccion/reports.php?last=true&d
 async function getLastReport() {
   const { data } = await axios.get(url);
   const users = Object.keys(data.Reports);
+  const accountReports = Object.keys(data.AccountReports);
 
-  return { data, users };
+  return { data, users, accountReports };
 }
 
 async function sendReport(channel, data) {
@@ -41,15 +42,15 @@ async function sendReport(channel, data) {
     );
   });
 
-  if (Array.isArray(report.data.AccountReports)) {
-    report.data.AccountReports.forEach((account) => {
+  if (Array.isArray(report.accountReports)) {
+    report.accountReports.forEach((account) => {
       channel.send(
         new SuccessEmbed()
           .setColor(0xf44ede)
-          .setTitle(`Cuenta ID: ${account.AccID}`)
+          .setTitle(`Cuenta ID: ${report.data.AccountReports[account].AccID}`)
           .setURL('https://estadisticas.ao20.com.ar/produccion/reports.php?dir=reports')
-          .addFields({ name: 'Warnings', value: account.Warnings ? account.Warnings : 'No hay warnings' })
-          .addFields({ name: 'Errors', value: account.Errors ? account.Errors : 'No hay errores' })
+          .addFields({ name: 'Warnings', value: report.data.AccountReports[account].Warnings ? report.data.AccountReports[account].Warnings : 'No hay warnings' })
+          .addFields({ name: 'Errors', value: report.data.AccountReports[account].Errors ? report.data.AccountReports[account].Errors : 'No hay errores' })
           .setTimestamp()
           .setFooter(footer)
       );
