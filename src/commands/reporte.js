@@ -24,23 +24,25 @@ async function sendReport(channel, data) {
       .setFooter(footer)
   );
 
-  report.users.forEach((user) => {
-    channel.send(
-      new SuccessEmbed()
-        .setColor(report.data.Reports[user].Errors ? 0xf91d09 : 0xc9ea10)
-        .setTitle(`${user}`)
-        .setURL('https://estadisticas.ao20.com.ar/produccion/reports.php?dir=reports')
-        .addFields(
-          { name: 'AccId', value: report.data.Reports[user].AccID, inline: true },
-          { name: 'BaseLevel', value: report.data.Reports[user].BaseLevel, inline: true },
-          { name: 'CharID', value: report.data.Reports[user].CharID, inline: true },
-        )
-        .addFields({ name: 'Warnings', value: report.data.Reports[user].Warnings ? report.data.Reports[user].Warnings : 'No hay warnings' })
-        .addFields({ name: 'Errors', value: report.data.Reports[user].Errors ? report.data.Reports[user].Errors : 'No hay errores' })
-        .setTimestamp()
-        .setFooter(footer)
-    );
-  });
+  if (Array.isArray(report.data.Reports)) {
+    report.users.forEach((user) => {
+      channel.send(
+        new SuccessEmbed()
+          .setColor(report.data.Reports[user].Errors ? 0xf91d09 : 0xc9ea10)
+          .setTitle(`${user}`)
+          .setURL('https://estadisticas.ao20.com.ar/produccion/reports.php?dir=reports')
+          .addFields(
+            { name: 'AccId', value: report.data.Reports[user].AccID, inline: true },
+            { name: 'BaseLevel', value: report.data.Reports[user].BaseLevel, inline: true },
+            { name: 'CharID', value: report.data.Reports[user].CharID, inline: true },
+          )
+          .addFields({ name: 'Warnings', value: report.data.Reports[user].Warnings ? report.data.Reports[user].Warnings : 'No hay warnings' })
+          .addFields({ name: 'Errors', value: report.data.Reports[user].Errors ? report.data.Reports[user].Errors : 'No hay errores' })
+          .setTimestamp()
+          .setFooter(footer)
+      );
+    });
+  }
 
   if (Array.isArray(report.data.AccountReports)) {
     report.accountReports.forEach((account) => {
