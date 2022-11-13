@@ -25,7 +25,7 @@ async function sendReport(channel, data) {
   );
 
   if (report.data.Reports != "There are no reports") {
-    report.users.forEach((user) => {
+    report.users.forEach((user) => {    
       channel.send(
         new SuccessEmbed()
           .setColor(report.data.Reports[user].Errors ? 0xf91d09 : 0xc9ea10)
