@@ -24,7 +24,7 @@ async function sendReport(channel, data) {
       .setFooter(footer)
   );
 
-  if (Array.isArray(report.data.Reports)) {
+  if (report.data.Reports != "There are no reports") {
     report.users.forEach((user) => {
       channel.send(
         new SuccessEmbed()
