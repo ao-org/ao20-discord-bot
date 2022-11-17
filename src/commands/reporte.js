@@ -3,7 +3,12 @@ const axios = require('axios');
 const url = 'https://estadisticas.ao20.com.ar/produccion/reports.php?last=true&dir=reports'
 
 async function getLastReport() {
-  const { data } = await axios.get(url);
+  const auth = {
+    username: process.env.BASIC_AUTH_ESTADISTICAS_USERNAME,
+    password: process.env.BASIC_AUTH_ESTADISTICAS_PASSWORD
+  };
+
+  const { data } = await axios.get(url, { auth })
   const users = Object.keys(data.Reports);
   const accountReports = Object.keys(data.AccountReports);
 
