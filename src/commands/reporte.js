@@ -49,7 +49,7 @@ async function sendReport(channel, data) {
     });
   }
 
-  if (Array.isArray(report.data.AccountReports)) {
+  if (report.data.AccountReports != "There are no reports") {
     report.accountReports.forEach((account) => {
       channel.send(
         new SuccessEmbed()
