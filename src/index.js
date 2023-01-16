@@ -23,12 +23,6 @@ const errorMessages = [":x: ¡Ups! Algo falló"];
 
 const user_db = {};
 
-const updateMembersCount = (guild) => {
-  const channel = guild.channels.cache.get(process.env.MEMBERS_COUNT_CHANNEL_ID);
-  const numbers = /\d+/g;
-  channel.setName(channel.name.replace(numbers, guild.memberCount));
-};
-
 const onMessage = async (message) => {
   const { content, channel, author } = message;
 
@@ -99,13 +93,6 @@ const onReady = async () => {
     })  
     .catch(console.error);
   }, 900000);
-
-  //Esto es para actualizar contador de miembros de discord
-  setInterval(async () => {
-    const guild = client.guilds.cache.get(process.env.GUILD_ID);
-    updateMembersCount(guild);
-  }, 120000);
-
 };
 
 client.on("ready", onReady);
