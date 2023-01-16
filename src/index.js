@@ -98,7 +98,5 @@ const onReady = async () => {
 client.on("ready", onReady);
 client.on("message", onMessage);
 client.on("messageUpdate", onMessage);
-client.on("guildMemberAdd", (member) => updateMembersCount(member.guild));
-client.on("guildMemberRemove", (member) => updateMembersCount(member.guild));
 
 client.login(process.env.BOT_TOKEN);
