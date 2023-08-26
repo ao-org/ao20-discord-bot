@@ -16,7 +16,7 @@ const sdk = new opentelemetry.NodeSDK({
   traceExporter,
   instrumentations: [getNodeAutoInstrumentations()],
   resource: new Resource({
-    [SemanticResourceAttributes.SERVICE_NAME]: `ao20-api-${process.env.NODE_ENV}`
+    [SemanticResourceAttributes.SERVICE_NAME]: `ao20-discord-bot`
   })
 });
 
