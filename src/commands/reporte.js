@@ -73,6 +73,17 @@ module.exports = {
   description: "Obtiene reporte de evolucion de personajes.",
   async execute(message, args) {
     const { channel } = message;
+  
+    // Check if the message is from the specific channel ID
+    if (channel.id !== "1031483686828384276") {
+      return channel.send(
+        new ErrorEmbed()
+          .setTitle("Error")
+          .setDescription("You can only use this command in the specific channel.")
+      );
+    }
+  
     sendReport(channel);
   },
+  
 };
