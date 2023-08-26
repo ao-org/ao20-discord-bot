@@ -79,7 +79,7 @@ module.exports = {
       return channel.send(
         new ErrorEmbed()
           .setTitle("Error")
-          .setDescription("You can only use this command in the specific channel.")
+          .setDescription("Este comando solo se puede usar en el canal de reportes.")
       );
     }
   
