@@ -12,6 +12,10 @@
     "nodemon": "^2.0.7"
   },
   "dependencies": {
+    "@opentelemetry/api": "^1.4.1",
+		"@opentelemetry/auto-instrumentations-node": "^0.39.1",
+		"@opentelemetry/exporter-trace-otlp-http": "^0.41.2",
+		"@opentelemetry/sdk-node": "^0.41.2",
     "@prismicio/client": "^4.0.0",
     "axios": "^1.1.2",
     "discord.js": "^12.5.1",
