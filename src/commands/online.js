@@ -8,7 +8,7 @@ module.exports = {
   async execute(message, args) {
     const { channel } = message;
 
-    const { online_user_count } = await db("service_status").select("online_user_count").first();
-    channel.send(new SuccessEmbed().setTitle(`${emoji()} Hay ${online_user_count} usuarios conectados en el servidor.`));
+    // const { online_user_count } = await db("service_status").select("online_user_count").first();
+    channel.send(new SuccessEmbed().setTitle(`${emoji()} Comando deprecado, por favor utilizar el bot de SteamDB. Comando /players`));
   },
 };
