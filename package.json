@@ -13,14 +13,15 @@
   },
   "dependencies": {
     "@opentelemetry/api": "^1.4.1",
-		"@opentelemetry/auto-instrumentations-node": "^0.39.1",
-		"@opentelemetry/exporter-trace-otlp-http": "^0.41.2",
-		"@opentelemetry/sdk-node": "^0.41.2",
+    "@opentelemetry/auto-instrumentations-node": "^0.39.1",
+    "@opentelemetry/exporter-trace-otlp-http": "^0.41.2",
+    "@opentelemetry/sdk-node": "^0.41.2",
     "@prismicio/client": "^4.0.0",
-    "axios": "^1.1.2",
+    "axios": "^1.7.9",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
     "knex": "^0.21.17",
-    "mysql2": "^2.2.5"
+    "mysql2": "^2.2.5",
+    "simple-git": "^3.27.0"
   }
 }
