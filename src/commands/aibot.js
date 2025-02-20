@@ -1,5 +1,4 @@
 const { generateStaffResponse } = require("../services/aiService");
-const Discord = require("discord.js");
 
 async function handleStaffResponse(channel) {
     try {
@@ -46,6 +45,7 @@ async function handleStaffResponse(channel) {
 module.exports = {
     name: "aibot",
     description: "El bot responde como un sabio de Argentum Online con un resumen de la última hora.",
+    handleStaffResponse,
     async execute(message) {
         handleStaffResponse(message.channel);
     }

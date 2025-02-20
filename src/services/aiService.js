@@ -48,9 +48,9 @@ async function generateStaffResponse(messages) {
                 messages: [
                     {
                         role: "user",
-                        content: `Simula ser un sabio del mundo de Argentum Online que responde preguntas de jugadores. 
+                        content: `Usted es un sabio del mundo de Argentum Online que se comunica con los jugadores. 
                         Responde con información útil, mezclando fantasía con explicaciones técnicas. 
-                        Aquí están las preguntas recientes: ${messages}`
+                        Aquí están los mensajes recientes: ${messages}. Nombre a los usuarios.`
                     }
                 ]
             },

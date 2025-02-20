@@ -79,9 +79,12 @@ const onReady = async () => {
   }, 900000); // **Every 15 minutes**
 
   // **AI BOT AUTOMATION (Every 1 hour)**
+  const generalChannel = "761237314818408449";
   setInterval(async () => {
-    client.channels.fetch("761237314818408449")
-      .then(handleStaffResponse)
+    client.channels.fetch(generalChannel)
+      .then(async (channel) => {
+        handleStaffResponse(channel)
+      })
       .catch(console.error);
   }, 3600000); // **Every 1 hour**
 };
