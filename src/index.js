@@ -1,9 +1,8 @@
 require("dotenv").config();
 const fs = require("fs");
 const { Client, Collection } = require("discord.js");
-const { getRandomElement } = require("./utils");
 const { sendReport, getLastReport } = require("./commands/reporte");
-const { sendChangelog } = require("./commands/changelog");  // Import Changelog Function
+const { handleStaffResponse } = require("./commands/aibot");
 const { ErrorEmbed, SuccessEmbed } = require("./embeds");
 const { prefix } = require("./config.json");
 
@@ -59,9 +58,8 @@ const onMessage = async (message) => {
   }
 };
 
-// Store last report and changelog data to avoid duplicates
+// Store last report data to avoid duplicates
 let lastReportRawData = "";
-let lastChangelogData = "";
 
 const onReady = async () => {
   console.log(`BOT ${client.user.tag} conectado correctamente.`);
@@ -69,7 +67,7 @@ const onReady = async () => {
 
   // **REPORTS AUTOMATION (Every 15 minutes)**
   setInterval(async () => {
-    client.channels.fetch('1031483686828384276')
+    client.channels.fetch("1031483686828384276")
       .then(async (channel) => {
         const report = await getLastReport();
         if (JSON.stringify(report.data) !== lastReportRawData) {
@@ -80,28 +78,10 @@ const onReady = async () => {
       .catch(console.error);
   }, 900000); // **Every 15 minutes**
 
-  // **CHANGELOG AUTOMATION (Every 1 hour)**
+  // **AI BOT AUTOMATION (Every 1 hour)**
   setInterval(async () => {
-    client.channels.fetch('1031483686828384276')
-      .then(async (channel) => {
-        let changelogData = "";
-        
-        // Fetch changelog for all repositories
-        for (const { name, repo } of [
-          { name: "Assets", repo: "ao-org/argentum-online-assets" },
-          { name: "Server", repo: "ao-org/argentum-online-server" },
-          { name: "Client", repo: "ao-org/argentum-online-client" }
-        ]) {
-          const changelog = await sendChangelog(channel, true); // Fetch without sending
-          if (changelog) changelogData += JSON.stringify(changelog);
-        }
-
-        // Only post if there are new updates
-        if (changelogData !== lastChangelogData) {
-          lastChangelogData = changelogData;
-          sendChangelog(channel);
-        }
-      })
+    client.channels.fetch("761237314818408449")
+      .then(handleStaffResponse)
       .catch(console.error);
   }, 3600000); // **Every 1 hour**
 };
