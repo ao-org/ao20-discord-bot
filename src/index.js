@@ -1,12 +1,19 @@
 require("dotenv").config();
 const fs = require("fs");
-const { Client, Collection } = require("discord.js");
+const { Client, Collection, GatewayIntentBits } = require("discord.js");
 const { sendReport, getLastReport } = require("./commands/reporte");
 const { handleStaffResponse } = require("./commands/aibot");
 const { ErrorEmbed, SuccessEmbed } = require("./embeds");
 const { prefix } = require("./config.json");
 
-const client = new Client();
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+    GatewayIntentBits.GuildMembers
+  ]
+});
 client.commands = new Collection();
 
 const commandFiles = fs.readdirSync("./src/commands").filter((file) => file.endsWith(".js"));

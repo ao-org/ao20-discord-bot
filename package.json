@@ -9,19 +9,20 @@
   },
   "author": "Bruno De Angelis (SimP)",
   "devDependencies": {
-    "nodemon": "^2.0.7"
+    "nodemon": "3.1.10"
   },
   "dependencies": {
-    "@opentelemetry/api": "^1.4.1",
-    "@opentelemetry/auto-instrumentations-node": "^0.39.1",
-    "@opentelemetry/exporter-trace-otlp-http": "^0.41.2",
-    "@opentelemetry/sdk-node": "^0.41.2",
-    "@prismicio/client": "^4.0.0",
+    "@opentelemetry/api": "1.9.0",
+    "@opentelemetry/auto-instrumentations-node": "0.62.1",
+    "@opentelemetry/exporter-trace-otlp-http": "0.203.0",
+    "@opentelemetry/sdk-node": "0.203.0",
+    "@prismicio/client": "7.20.1",
     "axios": "^1.7.9",
-    "discord.js": "^12.5.1",
-    "dotenv": "^8.2.0",
-    "knex": "^0.21.17",
-    "mysql2": "^2.2.5",
-    "simple-git": "^3.27.0"
+    "discord.js": "14.22.1",
+    "dotenv": "17.2.1",
+    "knex": "^3.1.0",
+    "mysql2": "^3.14.3",
+    "node": "24.7.0",
+    "simple-git": "3.28.0"
   }
 }
