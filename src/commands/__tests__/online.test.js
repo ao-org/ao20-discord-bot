@@ -78,8 +78,12 @@ describe("execute", () => {
     // SuccessEmbed constructor was called
     expect(SuccessEmbed).toHaveBeenCalledTimes(1);
 
-    // channel.send was called with the embed instance
+    // channel.send was called with v14 { embeds: [...] } syntax
     expect(message.channel.send).toHaveBeenCalledTimes(1);
+    const sendArg = message.channel.send.mock.calls[0][0];
+    expect(sendArg).toHaveProperty("embeds");
+    expect(Array.isArray(sendArg.embeds)).toBe(true);
+    expect(sendArg.embeds).toHaveLength(1);
 
     // setTitle was called with text containing deprecation keywords
     const embedInstance = SuccessEmbed.mock.results[0].value;

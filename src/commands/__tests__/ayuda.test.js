@@ -60,11 +60,10 @@ describe("execute", () => {
 
     expect(message.channel.send).toHaveBeenCalledTimes(1);
     const sentData = message.channel.send.mock.calls[0][0];
-    expect(sentData).toBeInstanceOf(Array);
-    // The array should contain all command names
-    const joined = sentData.join(" ");
-    expect(joined).toContain("/ayuda");
-    expect(joined).toContain("/online");
+    expect(sentData).toHaveProperty("content");
+    expect(typeof sentData.content).toBe("string");
+    expect(sentData.content).toContain("/ayuda");
+    expect(sentData.content).toContain("/online");
   });
 
   /** @requirement 4.3 */
@@ -81,9 +80,9 @@ describe("execute", () => {
 
     expect(message.channel.send).toHaveBeenCalledTimes(1);
     const sentData = message.channel.send.mock.calls[0][0];
-    const joined = sentData.join(" ");
-    expect(joined).toContain("ayuda");
-    expect(joined).toContain("Help command");
+    expect(sentData).toHaveProperty("content");
+    expect(sentData.content).toContain("ayuda");
+    expect(sentData.content).toContain("Help command");
   });
 
   /** @requirement 4.4 */
@@ -94,7 +93,7 @@ describe("execute", () => {
 
     expect(message.reply).toHaveBeenCalledTimes(1);
     expect(message.reply).toHaveBeenCalledWith(
-      expect.stringContaining("nonexistent")
+      expect.objectContaining({ content: expect.stringContaining("nonexistent") })
     );
     expect(message.channel.send).not.toHaveBeenCalled();
   });
@@ -125,9 +124,9 @@ describe("execute", () => {
 
           expect(message.channel.send).toHaveBeenCalledTimes(1);
           const sentData = message.channel.send.mock.calls[0][0];
-          const joined = sentData.join(" ");
+          expect(sentData).toHaveProperty("content");
           names.forEach((n) => {
-            expect(joined).toContain(n);
+            expect(sentData.content).toContain(n);
           });
         }
       )
@@ -154,9 +153,9 @@ describe("execute", () => {
 
           expect(message.channel.send).toHaveBeenCalledTimes(1);
           const sentData = message.channel.send.mock.calls[0][0];
-          const joined = sentData.join(" ");
-          expect(joined).toContain(name);
-          expect(joined).toContain(description);
+          expect(sentData).toHaveProperty("content");
+          expect(sentData.content).toContain(name);
+          expect(sentData.content).toContain(description);
         }
       )
     );
@@ -182,7 +181,7 @@ describe("execute", () => {
 
           expect(message.reply).toHaveBeenCalledTimes(1);
           expect(message.reply).toHaveBeenCalledWith(
-            expect.stringContaining(invalidName)
+            expect.objectContaining({ content: expect.stringContaining(invalidName) })
           );
           expect(message.channel.send).not.toHaveBeenCalled();
         }
