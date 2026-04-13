@@ -35,7 +35,7 @@ async function sendChangelog(channel) {
         }
     }
 
-    changelogEmbeds.forEach(embed => channel.send(embed));
+    changelogEmbeds.forEach(embed => channel.send({ embeds: [embed] }));
 }
 
 module.exports = {

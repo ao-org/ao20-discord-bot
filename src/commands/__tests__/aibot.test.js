@@ -95,9 +95,9 @@ describe("handleStaffResponse", () => {
 
     await handleStaffResponse(channel);
 
-    expect(channel.send).toHaveBeenCalledWith(
-      "No hay suficientes mensajes recientes para resumir."
-    );
+    expect(channel.send).toHaveBeenCalledWith({
+      content: "No hay suficientes mensajes recientes para resumir.",
+    });
     expect(generateStaffResponse).not.toHaveBeenCalled();
   });
 
@@ -109,7 +109,7 @@ describe("handleStaffResponse", () => {
 
     await handleStaffResponse(channel);
 
-    expect(channel.send).toHaveBeenCalledWith("This is the AI response");
+    expect(channel.send).toHaveBeenCalledWith({ content: "This is the AI response" });
   });
 
   /** @requirement 9.5 */
@@ -145,9 +145,9 @@ describe("handleStaffResponse", () => {
 
     await handleStaffResponse(channel);
 
-    expect(channel.send).toHaveBeenCalledWith(
-      "No pude generar una respuesta en este momento. Inténtalo más tarde."
-    );
+    expect(channel.send).toHaveBeenCalledWith({
+      content: "No pude generar una respuesta en este momento. Inténtalo más tarde.",
+    });
   });
 
   /** Feature: controller-unit-tests, Property 9: AI response forwarded to channel */
@@ -164,7 +164,7 @@ describe("handleStaffResponse", () => {
 
           await handleStaffResponse(channel);
 
-          expect(channel.send).toHaveBeenCalledWith(aiResponse);
+          expect(channel.send).toHaveBeenCalledWith({ content: aiResponse });
         }
       )
     );

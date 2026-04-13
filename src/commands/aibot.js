@@ -24,7 +24,7 @@ async function handleStaffResponse(channel) {
         }
 
         if (messages.length === 0) {
-            return channel.send("No hay suficientes mensajes recientes para resumir.");
+            return channel.send({ content: "No hay suficientes mensajes recientes para resumir." });
         }
 
         // Join messages and send them to AI for summarization
@@ -32,13 +32,13 @@ async function handleStaffResponse(channel) {
         const response = await generateStaffResponse(conversationSummary);
 
         if (response && response.trim()) {
-            await channel.send(response);
+            await channel.send({ content: response });
         } else {
             console.warn("⚠️ AI returned an empty response.");
         }
     } catch (error) {
         console.error("❌ Error in handleStaffResponse:", error);
-        channel.send("No pude generar una respuesta en este momento. Inténtalo más tarde.");
+        channel.send({ content: "No pude generar una respuesta en este momento. Inténtalo más tarde." });
     }
 }
 
