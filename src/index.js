@@ -1,12 +1,19 @@
 require("dotenv").config();
 const fs = require("fs");
-const { Client, Collection } = require("discord.js");
+const { Client, Collection, GatewayIntentBits } = require("discord.js");
 const { sendReport, getLastReport } = require("./commands/reporte");
 const { handleStaffResponse } = require("./commands/aibot");
 const { ErrorEmbed, SuccessEmbed } = require("./embeds");
 const { prefix } = require("./config.json");
 
-const client = new Client();
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+    GatewayIntentBits.GuildMessageReactions,
+  ],
+});
 client.commands = new Collection();
 
 const commandFiles = fs.readdirSync("./src/commands").filter((file) => file.endsWith(".js"));
@@ -36,10 +43,12 @@ const onMessage = async (message) => {
       // Check if user is muted
       if (user_db[author.id] && user_db[author.id].muted_upto >= timestamp) {
         await message.delete();
-        return author.send(
-          new ErrorEmbed()
-            .setTitle(`⛔ No podés enviar mensajes hasta: ${new Date(user_db[author.id].muted_upto).toLocaleTimeString('es')}`)
-        );
+        return author.send({
+          embeds: [
+            new ErrorEmbed()
+              .setTitle(`⛔ No podés enviar mensajes hasta: ${new Date(user_db[author.id].muted_upto).toLocaleTimeString('es')}`)
+          ],
+        });
       }
     }
 
@@ -53,7 +62,7 @@ const onMessage = async (message) => {
     const command = client.commands.get(commandName);
     command.execute(message, args);
   } catch (err) {
-    channel.send(new ErrorEmbed().setTitle(":x: ¡Ocurrió un error! Consulte a un administrador."));
+    channel.send({ embeds: [new ErrorEmbed().setTitle(":x: ¡Ocurrió un error! Consulte a un administrador.")] });
     console.error(err);
   }
 };
@@ -90,7 +99,12 @@ const onReady = async () => {
 };
 
 client.on("ready", onReady);
-client.on("message", onMessage);
+client.on("messageCreate", onMessage);
 client.on("messageUpdate", onMessage);
 
 client.login(process.env.BOT_TOKEN);
+
+// Safety net for Node.js 24 stricter stream/pipe error handling
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});

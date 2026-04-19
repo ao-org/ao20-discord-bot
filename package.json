@@ -9,22 +9,25 @@
     "test": "jest --detectOpenHandles"
   },
   "author": "Bruno De Angelis (SimP)",
+  "engines": {
+    "node": ">=24"
+  },
   "devDependencies": {
     "fast-check": "^4.6.0",
     "jest": "^29.7.0",
-    "nodemon": "^2.0.7"
+    "nodemon": "^3.1.9"
   },
   "dependencies": {
-    "@opentelemetry/api": "^1.4.1",
-    "@opentelemetry/auto-instrumentations-node": "^0.39.1",
-    "@opentelemetry/exporter-trace-otlp-http": "^0.41.2",
-    "@opentelemetry/sdk-node": "^0.41.2",
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/auto-instrumentations-node": "^0.56.0",
+    "@opentelemetry/exporter-trace-otlp-http": "^0.57.0",
+    "@opentelemetry/sdk-node": "^0.57.0",
     "@prismicio/client": "^4.0.0",
-    "axios": "^1.7.9",
-    "discord.js": "^12.5.1",
-    "dotenv": "^8.2.0",
-    "knex": "^0.21.17",
-    "mysql2": "^2.2.5",
+    "axios": "^1.9.0",
+    "discord.js": "^14.16.3",
+    "dotenv": "^16.4.7",
+    "knex": "^3.1.0",
+    "mysql2": "^3.12.0",
     "simple-git": "^3.27.0"
   }
 }

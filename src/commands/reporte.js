@@ -19,19 +19,19 @@ async function sendReport(channel, data) {
   const report = await getLastReport();
   const footer = `${report.data.DBData.EndDB} - ${report.data.DBData.StartDB}`
 
-  channel.send(
+  channel.send({ embeds: [
     new SuccessEmbed()
       .setColor(0x3f0e3e)
       .setTitle("Oro total del mundo (no incluye valor de items)")
       .setURL('http://estadisticas.ao20.com.ar/produccion/reports.php?dir=reports')
       .addFields({ name: 'Inflacion', value: report.data.Gold })
       .setTimestamp()
-      .setFooter(footer)
-  );
+      .setFooter({ text: footer })
+  ] });
 
   if (report.data.Reports != "There are no reports") {
     report.users.forEach((user) => {    
-      channel.send(
+      channel.send({ embeds: [
         new SuccessEmbed()
           .setColor(report.data.Reports[user].Errors ? 0xf91d09 : 0xc9ea10)
           .setTitle(`${user}`)
@@ -44,14 +44,14 @@ async function sendReport(channel, data) {
           .addFields({ name: 'Warnings', value: report.data.Reports[user].Warnings ? report.data.Reports[user].Warnings : 'No hay warnings' })
           .addFields({ name: 'Errors', value: report.data.Reports[user].Errors ? report.data.Reports[user].Errors : 'No hay errores' })
           .setTimestamp()
-          .setFooter(footer)
-      );
+          .setFooter({ text: footer })
+      ] });
     });
   }
 
   if (report.data.AccountReports != "There are no reports") {
     report.accountReports.forEach((account) => {
-      channel.send(
+      channel.send({ embeds: [
         new SuccessEmbed()
           .setColor(0xf44ede)
           .setTitle(`Cuenta ID: ${report.data.AccountReports[account].AccID}`)
@@ -59,8 +59,8 @@ async function sendReport(channel, data) {
           .addFields({ name: 'Warnings', value: report.data.AccountReports[account].Warnings ? report.data.AccountReports[account].Warnings : 'No hay warnings' })
           .addFields({ name: 'Errors', value: report.data.AccountReports[account].Errors ? report.data.AccountReports[account].Errors : 'No hay errores' })
           .setTimestamp()
-          .setFooter(footer)
-      );
+          .setFooter({ text: footer })
+      ] });
     });
   }
 
@@ -76,11 +76,11 @@ module.exports = {
   
     // Check if the message is from the specific channel ID
     if (channel.id !== "1031483686828384276") {
-      return channel.send(
+      return channel.send({ embeds: [
         new ErrorEmbed()
           .setTitle("Error")
           .setDescription("Este comando solo se puede usar en el canal de reportes.")
-      );
+      ] });
     }
   
     sendReport(channel);

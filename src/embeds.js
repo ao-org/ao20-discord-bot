@@ -1,14 +1,14 @@
-const { MessageEmbed } = require("discord.js");
-class ErrorEmbed extends MessageEmbed {
+const { EmbedBuilder } = require("discord.js");
+class ErrorEmbed extends EmbedBuilder {
   constructor() {
     super();
-    this.setColor("RED");
+    this.setColor(0xFF0000);
   }
 }
-class SuccessEmbed extends MessageEmbed {
+class SuccessEmbed extends EmbedBuilder {
   constructor() {
     super();
-    this.setColor("GREEN");
+    this.setColor(0x57F287);
   }
 }
 

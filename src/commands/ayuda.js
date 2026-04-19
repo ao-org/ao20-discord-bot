@@ -18,19 +18,19 @@ module.exports = {
       );
       data.push(`Podés enviar \`${prefix}ayuda {comando}\` para recibir información sobre un comando específico.`);
 
-      return channel.send(data);
+      return channel.send({ content: data.join("\n") });
     }
 
     const name = args[0].toLowerCase();
     const command = commands.get(name);
 
     if (!command) {
-      return message.reply(`El comando \`${prefix}${args[0]}\` no existe.`);
+      return message.reply({ content: `El comando \`${prefix}${args[0]}\` no existe.` });
     }
 
     data.push(`**Nombre:** \`${command.name}\``);
     if (command.description) data.push(`**Descripción:** ${command.description}`);
 
-    channel.send(data, { split: true });
+    channel.send({ content: data.join("\n") });
   },
 };
