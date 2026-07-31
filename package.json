@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "description": "Bot for Argentum 20 discord server.",
   "scripts": {
+    "prettier": "prettier --write .",
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
@@ -23,6 +24,7 @@
   },
   "dependencies": {
     "discord.js": "14.27.0",
-    "dotenv": "^16.4.7"
+    "dotenv": "^16.4.7",
+    "prettier": "^3.9.6"
   }
 }

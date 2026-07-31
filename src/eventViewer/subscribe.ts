@@ -1,5 +1,3 @@
-import { RawEvent } from '../events/rawEvent.js';
-
 export const pipe =
   <T>(...fns: Array<(x: T) => T>) =>
   (value: T) =>
