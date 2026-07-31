@@ -4,20 +4,25 @@ import { Client, Collection, GatewayIntentBits } from 'discord.js';
 
 import ping from './commands/ping.js';
 
-import { registerInteractionCreate } from './events/interactionCreate.js';
 import { registerReady } from './events/ready.js';
+import { registerInteractionCreate } from './events/interactionCreate.js';
+
+import { subscribe } from './eventlog/subscribe.js';
 
 import type { Command } from './types/command.js';
+import { processEvent } from './events/processEvent.js';
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds],
 });
 
-const commands = new Collection<string, Command>();
-
-commands.set(ping.data.name, ping);
+const commands = new Collection<string, Command>([[ping.data.name, ping]]);
 
 registerReady(client);
 registerInteractionCreate(client, commands);
 
-client.login(process.env.TOKEN);
+await client.login(process.env.TOKEN);
+
+subscribe('Application', processEvent(client));
+
+console.log('Windows Event Log subscriptions started.');
