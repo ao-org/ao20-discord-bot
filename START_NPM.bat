@@ -1,1 +1,0 @@
-pm2 start src/index.js --node-args="-r ./tracing.js" --name=ao20-discord-bot
