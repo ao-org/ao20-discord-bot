@@ -1,7 +1,5 @@
 import { Client, Events } from 'discord.js';
-
-import type { Command } from '../types.js';
-
+import { Command } from '../types/command.js';
 export function registerInteractionCreate(client: Client, commands: Map<string, Command>) {
   client.on(Events.InteractionCreate, async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
