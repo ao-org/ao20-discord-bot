@@ -3,23 +3,33 @@ import ping from './commands/ping.js';
 import { registerReady } from './events/ready.js';
 import { registerInteractionCreate } from './events/interactionCreate.js';
 import type { Command } from './types/command.js';
-import dotenv from 'dotenv';
+import { getConfig } from './config.js';
+import { ZabbixClient } from './services/zabbix.js';
+import { AiClient } from './services/ai.js';
+import { LogMonitor } from './services/logMonitor.js';
 
-dotenv.config({ path: '.env.local' });
-
+const config = getConfig();
 const client = new Client({
   intents: [GatewayIntentBits.Guilds],
 });
 
 const commands = new Collection<string, Command>([[ping.data.name, ping]]);
 
-const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_TOKEN!);
+const rest = new REST({ version: '10' }).setToken(config.discordToken);
 
-await rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID!, process.env.GUILD_ID!), {
+await rest.put(Routes.applicationGuildCommands(config.clientId, config.guildId), {
   body: [ping.data.toJSON()],
 });
 console.log('Commands deployed.');
-registerReady(client);
+const monitor = new LogMonitor({
+  client,
+  zabbix: new ZabbixClient(config.zabbixUrl, config.zabbixToken),
+  ai: new AiClient(config.aiUrl, config.aiToken, config.aiModel),
+  itemId: config.zabbixItemId,
+  channels: config.channels,
+  intervalMs: config.pollIntervalMs,
+});
+registerReady(client, () => monitor.start());
 registerInteractionCreate(client, commands);
 
-await client.login(process.env.DISCORD_BOT_TOKEN);
+await client.login(config.discordToken);
