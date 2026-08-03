@@ -9,7 +9,6 @@ export interface LogMonitorOptions {
   client: Client;
   zabbix: ZabbixClient;
   ai?: AiClient;
-  itemId: string;
   channels: Record<LogType, string>;
   intervalMs: number;
   processExisting?: boolean;
@@ -35,7 +34,8 @@ export class LogMonitor {
   }
 
   async poll(): Promise<void> {
-    const events = await this.options.zabbix.getHistory(this.options.itemId);
+    const events = await this.options.zabbix.getHistory();
+    console.log(events.length, 'Zabbix events retrieved');
     const fresh = events.filter((event) => !this.seen.has(this.eventId(event)));
     fresh.forEach((event) => this.seen.add(this.eventId(event)));
     if (!this.initialized && !this.options.processExisting) {
