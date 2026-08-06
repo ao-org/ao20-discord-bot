@@ -8,6 +8,7 @@ const colors: Record<string, number> = {
   'Cheating.Log': 0xf1c40f,
   'MonetizationShopErrors.log': 0xe67e22,
   'Performance.log': 0x9b59b6,
+  'GM.log': 0x3498db,
 };
 
 export function createLogEmbed(type: LogType, event: ZabbixHistory, summary?: string): EmbedBuilder {

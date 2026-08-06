@@ -25,8 +25,10 @@ const monitor = new LogMonitor({
   client,
   zabbix: new ZabbixClient(config.zabbixUrl, config.zabbixToken),
   ai: new AiClient(config.aiUrl, config.aiToken, config.aiModel),
+  itemId: config.zabbixItemId,
   channels: config.channels,
   intervalMs: config.pollIntervalMs,
+  processExisting: config.processExisting,
 });
 registerReady(client, () => monitor.start());
 registerInteractionCreate(client, commands);

@@ -20,14 +20,14 @@ export class ZabbixClient {
     private readonly fetcher: FetchLike = fetch,
   ) {}
 
-  async getHistory(limit = 100): Promise<ZabbixHistory[]> {
+  async getHistory(itemId: string, limit = 100): Promise<ZabbixHistory[]> {
     const response = await this.fetcher(this.url, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
         jsonrpc: '2.0',
         method: 'history.get',
-        params: { output: 'extend', history: 2, sortfield: 'clock', sortorder: 'DESC', limit },
+        params: { output: 'extend', history: 2, itemids: [itemId], sortfield: 'clock', sortorder: 'DESC', limit },
         auth: this.token,
         id: 1,
       }),
