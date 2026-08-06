@@ -7,9 +7,10 @@
     "prettier": "prettier --write .",
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
+    "pretest": "npm run build",
     "start": "node dist/index.js",
     "deploy": "tsx src/deploy-commands.ts",
-    "test": "jest __tests__"
+    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js __tests__"
   },
   "author": "Bruno De Angelis (SimP) & Alejo Burnowicz (Centorios)",
   "engines": {

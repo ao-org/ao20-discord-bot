@@ -36,7 +36,14 @@ function required(name: string): string {
 }
 
 export function getConfig() {
-  const optionalTypes = new Set<LogType>(['Bans.log', 'MacroServidor.log', 'MacroCliente.log', 'Propiedades.log', 'Premios.log', 'GM.log']);
+  const optionalTypes = new Set<LogType>([
+    'Bans.log',
+    'MacroServidor.log',
+    'MacroCliente.log',
+    'Propiedades.log',
+    'Premios.log',
+    'GM.log',
+  ]);
   const channels = Object.fromEntries(
     LOG_TYPES.map((type) => {
       const name = `DISCORD_LOG_CHANNEL_${type.replace(/[^A-Za-z0-9]/g, '_').toUpperCase()}`;
