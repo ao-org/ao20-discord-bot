@@ -1,33 +1,31 @@
 {
   "name": "ao20-discord-bot",
+  "type": "module",
   "version": "1.0.0",
   "description": "Bot for Argentum 20 discord server.",
-  "main": "./src/index.js",
   "scripts": {
-    "start": "node ./src/index.js",
-    "dev": "nodemon ./src/index.js",
-    "test": "jest --detectOpenHandles"
+    "prettier": "prettier --write .",
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "pretest": "npm run build",
+    "start": "node dist/index.js",
+    "deploy": "tsx src/deploy-commands.ts",
+    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js __tests__"
   },
-  "author": "Bruno De Angelis (SimP)",
+  "author": "Bruno De Angelis (SimP) & Alejo Burnowicz (Centorios)",
   "engines": {
     "node": ">=24"
   },
   "devDependencies": {
-    "fast-check": "^4.6.0",
+    "@types/node": "^26.1.2",
     "jest": "^29.7.0",
-    "nodemon": "^3.1.9"
+    "nodemon": "^3.1.9",
+    "tsx": "^4.23.1",
+    "typescript": "^7.0.2"
   },
   "dependencies": {
-    "@opentelemetry/api": "^1.9.1",
-    "@opentelemetry/auto-instrumentations-node": "^0.79.0",
-    "@opentelemetry/exporter-trace-otlp-http": "^0.221.0",
-    "@opentelemetry/sdk-node": "^0.221.0",
-    "@prismicio/client": "^4.0.0",
-    "axios": "^1.9.0",
-    "discord.js": "^14.16.3",
+    "discord.js": "14.27.0",
     "dotenv": "^16.4.7",
-    "knex": "^3.1.0",
-    "mysql2": "^3.12.0",
-    "simple-git": "^3.27.0"
+    "prettier": "^3.9.6"
   }
 }
