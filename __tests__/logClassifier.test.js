@@ -27,6 +27,9 @@ describe('classifyLog', () => {
     ['19 - [Cheating.log] security event', 'Cheating.Log'],
     ['20 - [BankTransfers.log] transfer', 'BankTransfers.log'],
     ['5 - Error number: 5 | Description: failure', 'Errores.log'],
+    ['0 - Starting the server 14/08/2026 16:57:23', 'MacroServidor.log'],
+    ['0 - Stopping the server', 'MacroServidor.log'],
+    ['1 - Server restarted', 'MacroServidor.log'],
   ])('%s -> %s', (value, expected) => {
     expect(classifyLog(value)).toBe(expected);
   });

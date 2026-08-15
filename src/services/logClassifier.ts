@@ -24,6 +24,8 @@ const prefixes: Array<[RegExp, LogType]> = [
   [/^\s*\d+\s*-\s*Error number:/i, 'Errores.log'],
   // LogGM writes: "errorNumber - [GMName] message" without a filename.
   [/^\s*\d+\s*-\s*\[[^\]]+\]/i, 'GM.log'],
+  // Catch-all: plain numbered lines like "0 - Starting the server ..."
+  [/^\s*\d+\s*-\s+\S/i, 'MacroServidor.log'],
 ];
 
 export function classifyLog(value: string): LogType | undefined {
