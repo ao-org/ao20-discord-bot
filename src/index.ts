@@ -7,6 +7,7 @@ import { getConfig } from './config.js';
 import { ZabbixClient } from './services/zabbix.js';
 import { AiClient } from './services/ai.js';
 import { LogMonitor } from './services/logMonitor.js';
+import { registerClientDiagnostics } from './events/clientDiagnostics.js';
 
 const config = getConfig();
 const client = new Client({
@@ -23,7 +24,7 @@ await rest.put(Routes.applicationGuildCommands(config.clientId, config.guildId),
 console.log('Commands deployed.');
 const monitor = new LogMonitor({
   client,
-  zabbix: new ZabbixClient(config.zabbixUrl, config.zabbixToken),
+  zabbix: new ZabbixClient(config.zabbixUrl, config.zabbixToken, config.zabbixTimeoutMs),
   ai: new AiClient(config.aiUrl, config.aiToken, config.aiModel),
   itemId: config.zabbixItemId,
   channels: config.channels,
@@ -32,5 +33,6 @@ const monitor = new LogMonitor({
 });
 registerReady(client, () => monitor.start());
 registerInteractionCreate(client, commands);
+registerClientDiagnostics(client);
 
 await client.login(config.discordToken);

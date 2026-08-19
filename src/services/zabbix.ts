@@ -17,6 +17,7 @@ export class ZabbixClient {
   constructor(
     private readonly url: string,
     private readonly token: string,
+    private readonly timeoutMs = 10_000,
     private readonly fetcher: FetchLike = fetch,
   ) {}
 
@@ -24,10 +25,18 @@ export class ZabbixClient {
     const response = await this.fetcher(this.url, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
+      signal: AbortSignal.timeout(this.timeoutMs),
       body: JSON.stringify({
         jsonrpc: '2.0',
         method: 'history.get',
-        params: { output: 'extend', history: 2, itemids: [itemId], sortfield: 'clock', sortorder: 'DESC', limit },
+        params: {
+          output: 'extend',
+          history: 2,
+          itemids: [itemId],
+          sortfield: 'clock',
+          sortorder: 'DESC',
+          limit,
+        },
         auth: this.token,
         id: 1,
       }),

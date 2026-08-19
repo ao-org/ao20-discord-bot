@@ -13,6 +13,7 @@ export interface LogMonitorOptions {
   channels: Record<LogType, string>;
   intervalMs: number;
   processExisting?: boolean;
+  maxSeenEvents?: number;
 }
 
 export class LogMonitor {
@@ -24,6 +25,7 @@ export class LogMonitor {
   constructor(private readonly options: LogMonitorOptions) {}
 
   start(): void {
+    if (this.timer) return;
     void this.poll().catch((error) => console.error('Zabbix polling failed', error));
     this.timer = setInterval(
       () => void this.poll().catch((error) => console.error('Zabbix polling failed', error)),
@@ -32,7 +34,10 @@ export class LogMonitor {
   }
 
   stop(): void {
-    if (this.timer) clearInterval(this.timer);
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = undefined;
+    }
   }
 
   async poll(): Promise<void> {
@@ -45,9 +50,14 @@ export class LogMonitor {
       const events = await this.options.zabbix.getHistory(this.options.itemId);
       console.log(events.length, 'Zabbix events retrieved');
       const fresh = events.filter((event) => !this.seen.has(this.eventId(event)));
-      console.log(fresh.length, 'fresh Zabbix events;', fresh.filter((event) => classifyLog(event.value)).length, 'classified');
+      console.log(
+        fresh.length,
+        'fresh Zabbix events;',
+        fresh.filter((event) => classifyLog(event.value)).length,
+        'classified',
+      );
       if (!this.initialized && !this.options.processExisting) {
-        fresh.forEach((event) => this.seen.add(this.eventId(event)));
+        fresh.forEach((event) => this.remember(event));
         this.initialized = true;
         return;
       }
@@ -55,7 +65,7 @@ export class LogMonitor {
       for (const event of [...fresh].reverse()) {
         try {
           await this.publish(event);
-          this.seen.add(this.eventId(event));
+          this.remember(event);
         } catch (error) {
           console.error(`Failed to publish Zabbix event to Discord (item ${event.itemid})`, error);
         }
@@ -69,6 +79,16 @@ export class LogMonitor {
     return event.logeventid ?? `${event.itemid}:${event.clock}:${event.ns ?? ''}:${event.value}`;
   }
 
+  private remember(event: ZabbixHistory): void {
+    this.seen.add(this.eventId(event));
+    const maxSeenEvents = this.options.maxSeenEvents ?? 1_000;
+    while (this.seen.size > maxSeenEvents) {
+      const oldest = this.seen.values().next().value;
+      if (oldest === undefined) break;
+      this.seen.delete(oldest);
+    }
+  }
+
   private async publish(event: ZabbixHistory): Promise<void> {
     const type = classifyLog(event.value);
     if (!type) {
@@ -77,19 +97,26 @@ export class LogMonitor {
     }
     const channelId = this.options.channels[type];
     if (!channelId) {
-      console.warn(`No Discord channel configured for ${type}; set DISCORD_LOG_CHANNEL_${type.replace(/[^A-Za-z0-9]/g, '_').toUpperCase()}`);
+      console.warn(
+        `No Discord channel configured for ${type}; set DISCORD_LOG_CHANNEL_${type.replace(/[^A-Za-z0-9]/g, '_').toUpperCase()}`,
+      );
       return;
     }
     const channel = await this.options.client.channels.fetch(channelId);
-    if (!channel?.isTextBased() || !('send' in channel)) throw new Error(`Channel for ${type} is not text-based`);
+    if (!channel?.isTextBased() || !('send' in channel))
+      throw new Error(`Channel for ${type} is not text-based`);
     const textChannel = channel as TextChannel;
     const message = await textChannel.send({ embeds: [createLogEmbed(type, event)] });
 
     if (this.options.ai) {
       void this.options.ai
         .summarize(event.value)
-        .then((summary) => (summary ? message.edit({ embeds: [createLogEmbed(type, event, summary)] }) : undefined))
-        .catch((error) => console.error('AI enrichment failed; publishing the original log', error));
+        .then((summary) =>
+          summary ? message.edit({ embeds: [createLogEmbed(type, event, summary)] }) : undefined,
+        )
+        .catch((error) =>
+          console.error('AI enrichment failed; publishing the original log', error),
+        );
     }
   }
 }

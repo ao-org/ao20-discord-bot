@@ -35,6 +35,16 @@ function required(name: string): string {
   return value;
 }
 
+function positiveNumber(name: string, fallback: number): number {
+  const raw = process.env[name];
+  if (raw === undefined) return fallback;
+  const value = Number(raw);
+  if (!Number.isFinite(value) || value <= 0) {
+    throw new Error(`${name} must be a positive number`);
+  }
+  return value;
+}
+
 export function getConfig() {
   const optionalTypes = new Set<LogType>([
     'Bans.log',
@@ -58,8 +68,9 @@ export function getConfig() {
     zabbixUrl: process.env.ZABBIX_URL ?? 'https://zabbix.ao20.com.ar/zabbix/api_jsonrpc.php',
     zabbixToken: required('ZABBIX_API_TOKEN'),
     zabbixItemId: process.env.ZABBIX_ITEM_ID ?? '46595',
+    zabbixTimeoutMs: positiveNumber('ZABBIX_REQUEST_TIMEOUT_MS', 10_000),
     processExisting: process.env.ZABBIX_PROCESS_EXISTING_LOGS !== 'false',
-    pollIntervalMs: Number(process.env.ZABBIX_POLL_INTERVAL_MS ?? 15000),
+    pollIntervalMs: positiveNumber('ZABBIX_POLL_INTERVAL_MS', 15_000),
     aiUrl: process.env.AI_URL ?? 'https://llm.lucasrecoaro.com.ar/v1/chat/completions',
     aiToken: process.env.AI_TOKEN,
     aiModel: process.env.AI_MODEL ?? 'default',

@@ -45,4 +45,35 @@ describe('LogMonitor', () => {
     await monitor.poll();
     expect(setup.send).not.toHaveBeenCalled();
   });
+
+  test('bounds remembered events without breaking recent deduplication', async () => {
+    const setup = makeClient();
+    const zabbix = {
+      getHistory: jest
+        .fn()
+        .mockResolvedValueOnce([
+          event('13 - [Performance.log] third', '3'),
+          event('13 - [Performance.log] second', '2'),
+          event('13 - [Performance.log] first', '1'),
+        ])
+        .mockResolvedValueOnce([
+          event('13 - [Performance.log] third', '3'),
+          event('13 - [Performance.log] second', '2'),
+        ]),
+    };
+    const monitor = new LogMonitor({
+      client: setup.client,
+      zabbix,
+      itemId: '46595',
+      channels: { 'Performance.log': 'performance-channel' },
+      intervalMs: 60_000,
+      processExisting: true,
+      maxSeenEvents: 2,
+    });
+
+    await monitor.poll();
+    await monitor.poll();
+
+    expect(setup.send).toHaveBeenCalledTimes(3);
+  });
 });
