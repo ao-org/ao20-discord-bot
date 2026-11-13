@@ -1,8 +1,8 @@
 import { Client, Collection, GatewayIntentBits, REST, Routes } from 'discord.js';
 import ping from './commands/ping.js';
+import publicartexto from './commands/publicartexto.js';
 import { registerReady } from './events/ready.js';
 import { registerInteractionCreate } from './events/interactionCreate.js';
-import { registerStaffNewsRelay } from './events/staffNewsRelay.js';
 import type { Command } from './types/command.js';
 import { getConfig } from './config.js';
 import { ZabbixClient } from './services/zabbix.js';
@@ -12,19 +12,18 @@ import { registerClientDiagnostics } from './events/clientDiagnostics.js';
 
 const config = getConfig();
 const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent,
-  ],
+  intents: [GatewayIntentBits.Guilds],
 });
 
-const commands = new Collection<string, Command>([[ping.data.name, ping]]);
+const commands = new Collection<string, Command>([
+  [ping.data.name, ping],
+  [publicartexto.data.name, publicartexto],
+]);
 
 const rest = new REST({ version: '10' }).setToken(config.discordToken);
 
 await rest.put(Routes.applicationGuildCommands(config.clientId, config.guildId), {
-  body: [ping.data.toJSON()],
+  body: [...commands.values()].map((command) => command.data.toJSON()),
 });
 console.log('Commands deployed.');
 const monitor = new LogMonitor({
@@ -38,7 +37,6 @@ const monitor = new LogMonitor({
 });
 registerReady(client, () => monitor.start());
 registerInteractionCreate(client, commands);
-registerStaffNewsRelay(client, config.guildId, config.newsSourceChannelId);
 registerClientDiagnostics(client);
 
 await client.login(config.discordToken);
