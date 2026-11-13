@@ -2,6 +2,7 @@ import { Client, Collection, GatewayIntentBits, REST, Routes } from 'discord.js'
 import ping from './commands/ping.js';
 import { registerReady } from './events/ready.js';
 import { registerInteractionCreate } from './events/interactionCreate.js';
+import { registerStaffNewsRelay } from './events/staffNewsRelay.js';
 import type { Command } from './types/command.js';
 import { getConfig } from './config.js';
 import { ZabbixClient } from './services/zabbix.js';
@@ -11,7 +12,11 @@ import { registerClientDiagnostics } from './events/clientDiagnostics.js';
 
 const config = getConfig();
 const client = new Client({
-  intents: [GatewayIntentBits.Guilds],
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+  ],
 });
 
 const commands = new Collection<string, Command>([[ping.data.name, ping]]);
@@ -33,6 +38,7 @@ const monitor = new LogMonitor({
 });
 registerReady(client, () => monitor.start());
 registerInteractionCreate(client, commands);
+registerStaffNewsRelay(client, config.guildId);
 registerClientDiagnostics(client);
 
 await client.login(config.discordToken);
