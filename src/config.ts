@@ -65,7 +65,6 @@ export function getConfig() {
     discordToken: required('DISCORD_BOT_TOKEN'),
     clientId: required('CLIENT_ID'),
     guildId: required('GUILD_ID'),
-    newsSourceChannelId: process.env.DISCORD_NEWS_SOURCE_CHANNEL_ID ?? '1570155166311645306',
     zabbixUrl: process.env.ZABBIX_URL ?? 'https://zabbix.ao20.com.ar/zabbix/api_jsonrpc.php',
     zabbixToken: required('ZABBIX_API_TOKEN'),
     zabbixItemId: process.env.ZABBIX_ITEM_ID ?? '46595',
