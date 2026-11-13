@@ -38,7 +38,7 @@ const monitor = new LogMonitor({
 });
 registerReady(client, () => monitor.start());
 registerInteractionCreate(client, commands);
-registerStaffNewsRelay(client, config.guildId);
+registerStaffNewsRelay(client, config.guildId, config.newsSourceChannelId);
 registerClientDiagnostics(client);
 
 await client.login(config.discordToken);
